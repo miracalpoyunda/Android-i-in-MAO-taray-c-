@@ -1,4 +1,6 @@
-```yaml
+mkdir -p .github/workflows
+
+cat > .github/workflows/build-apk.yml <<'EOF'
 name: MAO Tarayıcı Android APK
 
 on:
@@ -12,30 +14,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Kaynak kodu indir
+      - name: Kaynak kodu indir
         uses: actions/checkout@v4
 
-      - name: 🐍 Python 3.12 kur
+      - name: Python kur
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: 📦 Flet kur
+      - name: Flet kur
         run: |
           python -m pip install --upgrade pip
-          pip install "flet[all]"
+          pip install -r requirements.txt
 
-      - name: 🔨 MAO APK oluştur
+      - name: APK oluştur
         run: |
-          flet build apk androidmaot.py \
-            --project "MAO Tarayıcı" \
-            --product "MAO Tarayıcı" \
-            --description "MAO Mobil Tarayıcı"
+          flet build apk androidmaot.py
 
-      - name: 📤 APK'yı Artifact olarak yükle
+      - name: APK'yı yükle
         uses: actions/upload-artifact@v4
         with:
-          name: MAO-Tarayici-Android-APK
+          name: MAO-Tarayici-APK
           path: build/apk/*.apk
           if-no-files-found: error
-```
+EOF
