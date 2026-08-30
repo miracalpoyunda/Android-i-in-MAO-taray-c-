@@ -1,4 +1,3 @@
-cat > .github/workflows/build-apk.yml <<'EOF'
 name: MAO Tarayıcı Android APK
 
 on:
@@ -35,4 +34,3 @@ jobs:
           name: MAO-Tarayici-APK
           path: build/apk/*.apk
           if-no-files-found: error
-EOF
