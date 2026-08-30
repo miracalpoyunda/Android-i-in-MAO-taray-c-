@@ -1,1 +1,1 @@
-flet
+echo "flet" > requirements.txt
