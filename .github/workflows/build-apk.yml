@@ -1,0 +1,41 @@
+```yaml
+name: MAO Tarayıcı Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Kaynak kodu indir
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python 3.12 kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 📦 Flet kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install "flet[all]"
+
+      - name: 🔨 MAO APK oluştur
+        run: |
+          flet build apk androidmaot.py \
+            --project "MAO Tarayıcı" \
+            --product "MAO Tarayıcı" \
+            --description "MAO Mobil Tarayıcı"
+
+      - name: 📤 APK'yı Artifact olarak yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: MAO-Tarayici-Android-APK
+          path: build/apk/*.apk
+          if-no-files-found: error
+```
