@@ -1,7 +1,6 @@
-cd /c/Users/miracaybuke/Documents/GitHub/Android-i-in-MAO-taray-c- && cat > .github/workflows/build-apk.yml <<'EOF'
-name: MAO Tarayıcı Android APK
+name: MAO Tarayici Android APK
 
-on:
+"on":
   workflow_dispatch:
   push:
     branches:
@@ -12,42 +11,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Kaynak kodu indir
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Python kur
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Flutter 3.44.8 kur
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.44.8"
           channel: stable
           cache: true
 
-      - name: Flet kur
+      - name: Install Flet
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Flet proje klasörü oluştur
+      - name: Prepare Flet project
         run: |
           mkdir -p mao_app
           cp androidmaot.py mao_app/main.py
           cp requirements.txt mao_app/requirements.txt
 
-      - name: APK oluştur
+      - name: Build APK
         working-directory: mao_app
-        run: |
-          flet build apk
+        run: flet build apk
 
-      - name: APK'yı yükle
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MAO-Tarayici-APK
           path: mao_app/build/apk/*.apk
           if-no-files-found: error
-EOF
-git add .github/workflows/build-apk.yml && git commit -m "Fix Flet Android build" && git pull --rebase origin main && git push origin main
